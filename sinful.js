@@ -19,7 +19,7 @@ void function (bless) {
 
 
     bless = bless || function (thing, name, content) {
-        
+
         if (typeof thing[name] !== 'undefined') {
             throw new Error('Sinful: ' + name + ' is already defined.');
         }
@@ -29,7 +29,7 @@ void function (bless) {
 
 
     // Fixing Floating-point math
-    
+
     // Computes the multiplier necessary to make x >= 1,
     // effectively eliminating miscalculations caused by
     // finite precision.
@@ -67,7 +67,7 @@ void function (bless) {
     // Begin augmenting
 
     [
-        // String interpolation function proposed in Crockford's The Good Parts 
+        // String interpolation function proposed in Crockford's The Good Parts
 
         [String.prototype, 'interp', function (expansions) {
 
@@ -86,7 +86,7 @@ void function (bless) {
         [String.prototype, 'repeat', function (times, sep) {
 
             sep = sep || '';
-        
+
             return times > 0 ?
                     new Array(times + 1).join(this + sep) :
                     '';
@@ -115,11 +115,11 @@ void function (bless) {
 
         [Object.prototype, 'maybe', function (propertyPath, otherwise) {
 
-            return (Array.isArray(propertyPath) ? 
+            return (Array.isArray(propertyPath) ?
                         propertyPath :
                         propertyPath.split(/\./)).reduce(function (current, next) {
-                
-                return typeof current[next] === 'undefined' ? 
+
+                return typeof current[next] === 'undefined' ?
                                 otherwise :
                                 current[next];
             }, this);
@@ -202,7 +202,7 @@ void function (bless) {
                     var clone = this;
 
                     return own(thing).
-                        filter(function (prop) { 
+                        filter(function (prop) {
                             return !blacklist || blacklist.indexOf(prop) === -1;
                         }).
                         reduce(function (copy, prop) {
@@ -225,7 +225,7 @@ void function (bless) {
                     copyStack  = [];
 
                 function clone(thing){
-                    
+
                     var type = Object.prototype.toString.call(thing);
 
                     return cloneFunctions[type].call(clone, thing, thingStack, copyStack);
@@ -237,7 +237,7 @@ void function (bless) {
 
 
 
-        [Function.prototype, 'curry', function (depth) { 
+        [Function.prototype, 'curry', function (depth) {
 
             var curry;
 
@@ -253,12 +253,12 @@ void function (bless) {
 
                 var that = this,
                     args = slice(arguments, 1);
-                
+
                 return function () {
 
                     var allArgs = args.concat(slice(arguments));
 
-                    return allArgs.length >= arity ? 
+                    return allArgs.length >= arity ?
                         that.apply(this, allArgs) :
                         curry.apply(that, [arity].concat(allArgs));
 
@@ -273,19 +273,19 @@ void function (bless) {
 
             var chain = [ this ].concat(slice(arguments));
 
-            return function () { 
+            return function () {
 
                 return chain.reduceRight(function (prev, curr) {
 
                     return [ curr.apply(null, prev) ];
 
                 }, slice(arguments)).pop();
-                
+
             };
         }],
 
         [Function.prototype, 'iterate', function (last) {
-            
+
             var that = this;
 
             return function () {
@@ -301,7 +301,7 @@ void function (bless) {
                 return func(that.apply(null, arguments));
             };
         }],
-        
+
         [Function.prototype, 'reducerify', function (initialValue) {
 
             var fn = this;
@@ -310,7 +310,7 @@ void function (bless) {
                 function () {
                     return slice(arguments).reduce(fn, initialValue);
                 } :
-                function () { 
+                function () {
                     return slice(arguments).reduce(fn);
                 };
         }],
@@ -325,10 +325,10 @@ void function (bless) {
 
             return function () {
 
-                var args = slice(arguments), 
+                var args = slice(arguments),
                     key  = keyGen(args);
 
-                return (typeof cache[key] === 'undefined') ? 
+                return (typeof cache[key] === 'undefined') ?
                     cache[key] = func.apply(null, args) :
                     cache[key];
             };
@@ -337,11 +337,11 @@ void function (bless) {
         [Function, 'liberate', liberate],
 
         [Function, 'enslave', function (fn) {
-            
+
             return function(){
                 return fn.bind(null, this).apply(null, arguments);
             };
-        
+
         }],
 
         [Function, 'bundle', function () {
@@ -393,9 +393,9 @@ void function (bless) {
         [Array, 'greedyZip', function () {
 
             var args     = slice(arguments),
-                shortest = Array.longest.apply(null, args);
+                longest = Array.longest.apply(null, args);
 
-            return shortest.reduce(function (prev, cur, i) {
+            return longest.reduce(function (prev, cur, i) {
 
                 prev.push(args.map(function (array) {
                     return array[i];
@@ -427,9 +427,9 @@ void function (bless) {
 
             var zipper   = arguments[0],
                 args     = slice(arguments, 1),
-                shortest = Array.longest.apply(null, args);
+                longest = Array.longest.apply(null, args);
 
-            return shortest.reduce(function (prev, cur, i) {
+            return longest.reduce(function (prev, cur, i) {
 
                 prev.push(zipper.apply(null, args.map(function (array) {
                     return array[i];
@@ -489,7 +489,7 @@ void function (bless) {
 
             if (this > upper) {
                 return upper;
-            } 
+            }
             else if (this < lower) {
                 return lower;
             }
@@ -512,7 +512,7 @@ void function (bless) {
             var list = [],
                 i    = this.valueOf(),
                 continuePred;
-            
+
             stepper = stepper || function (x) { return x + 1; };
 
             continuePred = (stepper(i) > i) ? function (x) { return x <= limit; } :
@@ -550,7 +550,7 @@ void function (bless) {
 
             delete arguments[0];
 
-            return reduce(arguments, 
+            return reduce(arguments,
                     cback, first * corrFactor) / corrFactor;
         }],
 
